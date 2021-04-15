@@ -2,7 +2,7 @@
   <el-container id="app">
     <el-header id="waring_header">
       <el-input v-model="input" placeholder="请输入想要查询的内容" class="el-input">
-        <el-select v-model="value" slot="prepend" placeholder="请选择">
+        <el-select v-model="value" slot="prepend" placeholder="请选择" style="width: 100px">
           <el-option
               v-for="item in options"
               :key="item.value"
@@ -71,7 +71,6 @@
 </template>
 
 <script>
-
 import axios from "axios";
 
 export default {
@@ -127,10 +126,13 @@ export default {
     },
 
     searchByName(page, name) {
-      axios.get('http://widealpha.top:8000/social?name=' + name + '&page=' + page + '&limit=' + 10)
+      axios.get('http://widealpha.top:8000/social/searchPeople?name=' + name + '&page=' + page + '&limit=' + 10)
           .then(response => {
             this.pageCount = response.data['count']
             this.tableData = response.data['list']
+            this.tableData.forEach((value)=>{
+              value['use_sex'] = (value['use_sex'] === 0 ? '女' : '男')
+            })
           })
           .catch(error => {
             console.log(error)
@@ -138,7 +140,7 @@ export default {
           .finally(() => this.loading = false)
     },
     searchByAddress(page, address) {
-      axios.get('http://widealpha.top:8000/social?address=' + address + '&page=' + page + '&limit=' + 10)
+      axios.get('http://widealpha.top:8000/social/searchPeople?address=' + address + '&page=' + page + '&limit=' + 10)
           .then(response => {
             this.pageCount = response.data['count']
             this.tableData = response.data['list']
@@ -149,7 +151,7 @@ export default {
           .finally(() => this.loading = false)
     },
     searchByEmail(page, email) {
-      axios.get('http://widealpha.top:8000/social/?email=' + email + '&page=' + page + '&limit=' + 10)
+      axios.get('http://widealpha.top:8000/social/searchPeople?email=' + email + '&page=' + page + '&limit=' + 10)
           .then(response => {
             this.pageCount = response.data['count']
             this.tableData = response.data['list']
@@ -174,15 +176,8 @@ export default {
 
 <style>
 
-.el-select .el-input {
-  width: 130px;
-}
-
 #waring_header {
   margin-top: 20px;
 }
 
-.input-with-select .el-input-group__prepend {
-  background-color: #fff;
-}
 </style>
