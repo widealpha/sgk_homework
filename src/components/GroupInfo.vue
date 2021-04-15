@@ -69,7 +69,20 @@ export default {
             left: 'right'
           },
           tooltip: {
-
+            "trigger": "item",
+            "confine": true,
+            "formatter": (p)=>{
+              if (p.dataType === 'node'){
+                if (p.data.id.startsWith('qq')){
+                  return `昵称:${p.data.name}</br>QQ号码:${p.data.id.substr(2)}`
+                } else {
+                  return `群名称:${p.data.name}</br>群号码:${p.data.id.substr(3)}`
+                }
+              }
+              if (p.dataType === 'edge'){
+                return `关系:${p.data.source.substr(2)}->${p.data.target.substr(3)}</br>`
+              }
+            }
           },
           legend: [{
             // selectedMode: 'single',
